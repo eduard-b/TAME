@@ -86,14 +86,3 @@ Results are saved to `final_results/results.csv`. Synthetic datasets are saved a
 ```bash
 python eval_saved.py
 ```
-
-## Citation
-
-```bibtex
-@article{barnoviciu2026tame,
-  title={Tabular Dataset Distillation via Moment Matching},
-  author={Barnoviciu, Eduard and Florea, Corneliu},
-  journal={Machine Learning and Knowledge Extraction},
-  year={2026}
-}
-```
