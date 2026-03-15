@@ -1,0 +1,12 @@
+torch>=2.0
+numpy
+pandas
+scikit-learn
+scipy
+matplotlib
+seaborn
+ctgan
+umap-learn
+tensorboard
+tqdm
+tabulate
