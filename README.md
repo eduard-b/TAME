@@ -18,7 +18,6 @@ L_c = ||μ_real - μ_syn||² + λ ||Σ_real - Σ_syn||²_F
 TAME/
 ├── main.py                    # sweep driver: synthesize → train → evaluate → CSV
 ├── eval_saved.py              # re-evaluate saved .pt synth files
-├── smoke_test.py              # verify all methods run end-to-end
 ├── data/
 │   └── prepare_database.py    # 18 OpenML datasets, standardized pipeline
 ├── synth/
@@ -73,9 +72,6 @@ Each has a size ladder (tiny → XL) controlled via `dm_embedder_size`.
 
 ```bash
 pip install -r requirements.txt
-
-# smoke test — runs all 11 methods on the smallest dataset
-python smoke_test.py
 
 # run a real experiment
 python main.py
