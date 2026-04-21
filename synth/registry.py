@@ -14,6 +14,7 @@ from .reference_synth import (
     voronoi_synthesize,
     gonzalez_synthesize,
 )
+from .tame_synth_learned import tame_learned_synthesize
 
 SYNTH_REGISTRY = {
     # TAME variants
@@ -76,6 +77,11 @@ SYNTH_REGISTRY = {
         "type": "reference",
         "teacher_required": False,
     },
+    "tame_learned": {
+    "fn": tame_learned_synthesize,
+    "type": "condensation",
+    "teacher_required": False,
+},
 }
 
 

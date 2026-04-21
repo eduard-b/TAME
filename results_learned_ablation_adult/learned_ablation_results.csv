@@ -1,0 +1,9 @@
+dataset,condition,synth_type,embedder,moment_order,ipc,classifier,num_runs,test_acc_mean,test_acc_std,synth_time_mean
+adult,random_low,tame_orders,ln_res_l,5,50,mlp,3,0.7608844001637779,0.00961008147524714,48.43842029571533
+adult,random_low,tame_orders,ln_res_l,5,50,rf,3,0.6812701878895409,0.025635604791125716,48.43842029571533
+adult,random_high,tame_orders,ln_res_l,4,50,mlp,3,0.7233064919703379,0.019471255336200595,51.90513769785563
+adult,random_high,tame_orders,ln_res_l,4,50,rf,3,0.7383649515490651,0.06470442233075643,51.90513769785563
+adult,learned_low,tame_learned,ln_res_l,5,50,mlp,3,0.42832446203539426,0.1789594844839887,285.338666677475
+adult,learned_low,tame_learned,ln_res_l,5,50,rf,3,0.4341931668258951,0.23235188107865243,285.338666677475
+adult,learned_high,tame_learned,ln_res_l,4,50,mlp,3,0.6520176516082071,0.05868919912447354,286.17320442199707
+adult,learned_high,tame_learned,ln_res_l,4,50,rf,3,0.7511032255129431,0.08881946437860591,286.17320442199707
