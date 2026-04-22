@@ -127,7 +127,7 @@ def main():
 
     RESULTS_DIR = "results_learned_ablation_adult"
     SYNTH_DIR = "synth_outputs_learned_ablation_adult"
-    os.makedirs(RESULTS_DIR, exist_ok=True)
+    os.makedirs(RESULTS_DIR, exist_ok=True) #4 aprilie 2:08 PM
 
     DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 

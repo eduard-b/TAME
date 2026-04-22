@@ -15,6 +15,7 @@ from .reference_synth import (
     gonzalez_synthesize,
 )
 from .tame_synth_learned import tame_learned_synthesize
+from .leverage_score_synth import leverage_score_synthesize
 
 SYNTH_REGISTRY = {
     # TAME variants
@@ -82,6 +83,11 @@ SYNTH_REGISTRY = {
     "type": "condensation",
     "teacher_required": False,
 },
+    "leverage_score": {
+        "fn": leverage_score_synthesize,
+        "type": "reference",
+        "teacher_required": False,
+    },
 }
 
 

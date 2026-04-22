@@ -95,15 +95,16 @@ def run_experiment(config, num_runs=10):
 
 
 def main():
-    DB_LIST = ["letter"]
-    SYNTH_TYPES = ["tame", "ctgan", "tvae"]
+    #DB_LIST = ['adult', 'electricity', 'madelon', 'magic', 'phishing', 'satimage']#list(DATASET_REGISTRY.keys())
+    DB_LIST = list(DATASET_REGISTRY.keys())
+    SYNTH_TYPES = ["leverage_score"]#, "ctgan", "tvae"]
     IPCs = [50]
-    EMBEDDERS = ["ln_res_l", "dcnv2_base", "node"]
-    CLASSIFIERS = ["mlp"]
-    NUM_RUNS = 3
+    EMBEDDERS = ["ln_res_l"]#, "dcnv2_base", "node"]
+    CLASSIFIERS = ["mlp", "rf"]
+    NUM_RUNS = 5
 
-    RESULTS_DIR = "final_results"
-    SYNTH_DIR = "synth_outputs"
+    RESULTS_DIR = "leverage_results"
+    SYNTH_DIR = "levarage_synth_outputs"
     os.makedirs(RESULTS_DIR, exist_ok=True)
 
     all_rows = []
