@@ -14,6 +14,15 @@ from .reference_synth import (
     voronoi_synthesize,
     gonzalez_synthesize,
 )
+from .tame_synth_learned import tame_learned_synthesize
+from .leverage_score_synth import leverage_score_synthesize
+from .leverage_score_variants import (
+    leverage_global_strat_synthesize,
+    leverage_global_unrestr_synthesize,
+    leverage_aug_synthesize,
+    leverage_aug_balanced_synthesize,
+    leverage_topk_synthesize,
+)
 
 SYNTH_REGISTRY = {
     # TAME variants
@@ -73,6 +82,41 @@ SYNTH_REGISTRY = {
     },
     "gonzalez": {
         "fn": gonzalez_synthesize,
+        "type": "reference",
+        "teacher_required": False,
+    },
+    "tame_learned": {
+    "fn": tame_learned_synthesize,
+    "type": "condensation",
+    "teacher_required": False,
+},
+    "leverage_score": {
+        "fn": leverage_score_synthesize,
+        "type": "reference",
+        "teacher_required": False,
+    },
+    "leverage_global_strat": {
+        "fn": leverage_global_strat_synthesize,
+        "type": "reference",
+        "teacher_required": False,
+    },
+    "leverage_global_unrestr": {
+        "fn": leverage_global_unrestr_synthesize,
+        "type": "reference",
+        "teacher_required": False,
+    },
+    "leverage_aug": {
+        "fn": leverage_aug_synthesize,
+        "type": "reference",
+        "teacher_required": False,
+    },
+    "leverage_aug_balanced": {
+        "fn": leverage_aug_balanced_synthesize,
+        "type": "reference",
+        "teacher_required": False,
+    },
+    "leverage_topk": {
+        "fn": leverage_topk_synthesize,
         "type": "reference",
         "teacher_required": False,
     },

@@ -7,7 +7,16 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score, roc_auc_score
 from sklearn.neural_network import MLPClassifier
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.naive_bayes import GaussianNB
 from sklearn.base import clone
+
+try:
+    from xgboost import XGBClassifier
+    _HAS_XGBOOST = True
+except ImportError:
+    _HAS_XGBOOST = False
 
 def train_classifier(data, config):
     """
@@ -111,8 +120,7 @@ def train_mlp_classifier(
 
     opt = torch.optim.Adam(model.parameters(), lr=1e-3)
 
-    best_auc = -1.0
-    best_state = None
+    last_val_auc = float("nan")
 
     for ep in range(1, epochs + 1):
 
@@ -133,7 +141,7 @@ def train_mlp_classifier(
             loss.backward()
             opt.step()
 
-        # -------------- VALID ----------------
+        # -------------- VALID (monitoring only; not used for selection) --------
         model.eval()
         probs_all = []
         trues_all = []
@@ -156,18 +164,14 @@ def train_mlp_classifier(
         trues_all = np.concatenate(trues_all)
 
         if num_classes == 2:
-            val_auc = roc_auc_score(trues_all, probs_all)
+            last_val_auc = roc_auc_score(trues_all, probs_all)
         else:
-            val_auc = roc_auc_score(trues_all, probs_all, multi_class="ovr", average="macro")
+            last_val_auc = roc_auc_score(trues_all, probs_all, multi_class="ovr", average="macro")
 
-        print(f"[Classifier] Epoch {ep:02d} | Val AUC: {val_auc:.4f}")
+        print(f"[Classifier] Epoch {ep:02d} | Val AUC: {last_val_auc:.4f}")
 
-        if val_auc > best_auc:
-            best_auc = val_auc
-            best_state = model.state_dict()
-
-    model.load_state_dict(best_state)
-    return model, best_auc        
+    # Final-epoch model is returned. No checkpoint selection.
+    return model, last_val_auc
 
 def train_sklearn_mlp_classifier(
     X_train,
@@ -302,9 +306,81 @@ def train_mlp_scikit(data, config):
     )
     return model
 
+def train_knn(data, config):
+    """K-Nearest Neighbors classifier (TDColER default: k=5)."""
+    X = data["X_train"].cpu().numpy()
+    y = data["y_train"].cpu().numpy()
+
+    model = KNeighborsClassifier(
+        n_neighbors=config.get("knn_n_neighbors", 5),
+        n_jobs=-1,
+    )
+    model.fit(X, y)
+    return model
+
+
+def train_logistic_regression(data, config):
+    """Logistic Regression classifier (TDColER default settings)."""
+    X = data["X_train"].cpu().numpy()
+    y = data["y_train"].cpu().numpy()
+
+    model = LogisticRegression(
+        penalty="l2",
+        tol=1e-4,
+        C=1.0,
+        solver="lbfgs",
+        max_iter=config.get("lr_max_iter", 1000),
+        random_state=config["random_seed"],
+        n_jobs=-1,
+    )
+    model.fit(X, y)
+    return model
+
+
+def train_naive_bayes(data, config):
+    """Gaussian Naive Bayes classifier (TDColER default settings)."""
+    X = data["X_train"].cpu().numpy()
+    y = data["y_train"].cpu().numpy()
+
+    model = GaussianNB(
+        var_smoothing=config.get("nb_var_smoothing", 1e-9),
+    )
+    model.fit(X, y)
+    return model
+
+
+def train_xgboost(data, config):
+    """XGBoost classifier. Mostly default; common defaults work well at IPC=10."""
+    if not _HAS_XGBOOST:
+        raise ImportError(
+            "xgboost not installed. Run: pip install xgboost"
+        )
+
+    X = data["X_train"].cpu().numpy()
+    y = data["y_train"].cpu().numpy()
+
+    model = XGBClassifier(
+        n_estimators=config.get("xgb_n_estimators", 100),
+        max_depth=config.get("xgb_max_depth", 6),
+        learning_rate=config.get("xgb_learning_rate", 0.3),
+        random_state=config["random_seed"],
+        n_jobs=-1,
+        verbosity=0,
+        use_label_encoder=False,
+        eval_metric="logloss",
+    )
+    model.fit(X, y)
+    return model
+
+
 CLASSIFIER_REGISTRY = {
     "mlp": train_mlp,
     "mlp_sci": train_mlp_scikit,
     "rf": train_rf,
     "svm": train_svm,
+    "knn": train_knn,
+    "lr": train_logistic_regression,
+    "nb": train_naive_bayes,
+    "xgboost": train_xgboost,
+    "xgb": train_xgboost,  # alias
 }

@@ -34,7 +34,7 @@ def run_experiment(config, num_runs=10):
     synth_times = []
 
     for run_id in range(num_runs):
-        run_seed = config.get("random_seed", 42) + run_id
+        run_seed = config.get("random_seed", 132) + run_id
         set_seed(run_seed)
 
         data = prepare_db(config, name=config["dataset_name"])
@@ -95,20 +95,27 @@ def run_experiment(config, num_runs=10):
 
 
 def main():
-    DB_LIST = ["letter"]
-    SYNTH_TYPES = ["tame", "ctgan", "tvae"]
+    DB_LIST = list(DATASET_REGISTRY.keys())
+    SYNTH_TYPES = ["tame", "vq","voronoi","leverage_score"]
     IPCs = [50]
-    EMBEDDERS = ["ln_res_l", "dcnv2_base", "node"]
-    CLASSIFIERS = ["mlp"]
-    NUM_RUNS = 3
+    EMBEDDERS = ["ln_res_l", "node", "dcnv2_base"]
+    CLASSIFIERS = ["mlp", "rf", "xgboost"]
+    NUM_RUNS = 10
 
-    RESULTS_DIR = "final_results"
-    SYNTH_DIR = "synth_outputs"
+    RESULTS_DIR = "results_final"
+    SYNTH_DIR = "synth_final"
+
     os.makedirs(RESULTS_DIR, exist_ok=True)
+    os.makedirs(SYNTH_DIR, exist_ok=True)
 
     all_rows = []
 
-    no_embedder = {"ctgan", "tvae", "full", "random", "vq", "voronoi", "gonzalez"}
+    SYNTH_TYPES = [
+        "leverage_aug_balanced"
+    ]
+
+    no_embedder = {
+        "ctgan", "tvae", "full", "random", "vq", "voronoi", "gonzalez", "leverage_score"}
 
     for db in DB_LIST:
         for synth_type in SYNTH_TYPES:
@@ -136,7 +143,7 @@ def main():
                         "classifiers": CLASSIFIERS,
                         "classifier_hidden": [128, 64],
                         "classifier_epochs": 20,
-                        "random_seed": 42,
+                        "random_seed": 132,
                         "synth_save_dir": SYNTH_DIR,
                     }
 
