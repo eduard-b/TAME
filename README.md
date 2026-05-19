@@ -1,4 +1,5 @@
-# TAME — Tabular Alignment via Moment Embeddings
+# TAME — implementation for the article Dataset Distillation by Tabular Alignment via Moment Embeddings
+
 
 Dataset distillation for tabular data through distribution matching. TAME optimizes a compact synthetic dataset by aligning first- and second-order statistics (mean + full covariance) with the real data in a frozen random embedder space.
 
